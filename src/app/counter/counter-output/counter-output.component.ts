@@ -1,20 +1,22 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+
+import { CounterState } from '../state/counter.state';
+import { Observable, Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-counter-output',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './counter-output.component.html',
   styleUrl: './counter-output.component.scss',
 })
 export class CounterOutputComponent implements OnInit {
-  private store = inject(Store<{ counter: { counter: number } }>);
-  counter!: number;
+  private store = inject(Store<{ counter: CounterState }>);
+  counter$!: Observable<{ counter: number }>;
 
   ngOnInit(): void {
-    this.store.select('counter').subscribe((data) => {
-      this.counter = data.counter;
-    });
+    this.counter$ = this.store.select('counter');
   }
 }
