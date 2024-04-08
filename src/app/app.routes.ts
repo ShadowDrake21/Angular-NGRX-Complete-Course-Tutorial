@@ -8,11 +8,28 @@ import { counterReducer } from './counter/state/counter.reducer';
 import { postsReducer } from './posts/state/posts.reducer';
 import { POST_STATE_NAME } from './posts/state/posts.selector';
 import { COUNTER_STATE_NAME } from './counter/state/counter.selectors';
+import { LoginComponent } from './auth/login/login.component';
+import { AUTH_STATE_NAME } from './auth/state/auth.selector';
+import { authReducer } from './auth/state/auth.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './auth/state/auth.effects';
 
 export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+  },
+
+  {
+    path: 'auth',
+    children: [
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./auth/login/login.component').then((m) => m.LoginComponent),
+      },
+    ],
+    providers: [importProvidersFrom(EffectsModule.forFeature([AuthEffects]))],
   },
   {
     path: 'counter',

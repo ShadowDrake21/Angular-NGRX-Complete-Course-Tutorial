@@ -1,18 +1,24 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideState, provideStore, StoreModule } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { isDevMode } from '@angular/core';
 
 import { routes } from './app.routes';
+import { EffectsModule } from '@ngrx/effects';
+import { provideHttpClient } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
 import { appReducer } from './store/app.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(StoreModule.forRoot({})), ///!!!!!!!!!!!!!!!!!!!!!!!!!
+    importProvidersFrom(
+      EffectsModule.forRoot([]),
+      StoreModule.forRoot(appReducer)
+    ), ///!!!!!!!!!!!!!!!!!!!!!!!!!
     provideStoreDevtools({
       logOnly: !isDevMode(),
     }),
+    provideHttpClient(),
   ],
 };
