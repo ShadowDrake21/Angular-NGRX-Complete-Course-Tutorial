@@ -5,6 +5,7 @@ import { CounterState } from '../state/counter.state';
 import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { getCounter } from '../state/counter.selectors';
+import { AppState } from '../../store/app.state';
 
 @Component({
   selector: 'app-counter-output',
@@ -14,7 +15,7 @@ import { getCounter } from '../state/counter.selectors';
   styleUrl: './counter-output.component.scss',
 })
 export class CounterOutputComponent implements OnInit {
-  private store = inject(Store<{ counter: CounterState }>);
+  private store = inject(Store<AppState>);
   counter$!: Observable<number>;
 
   ngOnInit(): void {

@@ -6,6 +6,7 @@ import { CounterState } from '../state/counter.state';
 import { changeName, customIncrement } from '../state/counter.actions';
 import { getName } from '../state/counter.selectors';
 import { Observable } from 'rxjs';
+import { AppState } from '../../store/app.state';
 
 @Component({
   selector: 'app-custom-counter-input',
@@ -15,7 +16,7 @@ import { Observable } from 'rxjs';
   styleUrl: './custom-counter-input.component.scss',
 })
 export class CustomCounterInputComponent implements OnInit {
-  private store = inject(Store<{ counter: CounterState }>);
+  private store = inject(Store<AppState>);
   value!: number;
   name$!: Observable<string>;
 

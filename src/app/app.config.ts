@@ -5,14 +5,14 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { isDevMode } from '@angular/core';
 
 import { routes } from './app.routes';
-import { counterReducer } from './counter/state/counter.reducer';
+import { appReducer } from './store/app.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideStore({ counter: counterReducer }),
+    provideStore(appReducer),
     provideStoreDevtools({
-      logOnly: !isDevMode(), // Restrict extension to log-only mode
+      logOnly: !isDevMode(),
     }),
   ],
 };
