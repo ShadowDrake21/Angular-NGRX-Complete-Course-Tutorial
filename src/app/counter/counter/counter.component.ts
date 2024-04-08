@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { CounterButtonsComponent } from '../counter-buttons/counter-buttons.component';
 import { CounterOutputComponent } from '../counter-output/counter-output.component';
 import { CustomCounterInputComponent } from '../custom-counter-input/custom-counter-input.component';
+import { Routes } from '@angular/router';
+import { StoreModule } from '@ngrx/store';
+import { counterReducer } from '../state/counter.reducer';
 
 @Component({
   selector: 'app-counter',
