@@ -7,7 +7,7 @@ import { AppState } from '../../store/app.state';
 import { Post } from '../../models/posts.model';
 import { getPosts } from '../state/posts.selector';
 import { RouterModule } from '@angular/router';
-import { deletePost } from '../state/posts.actions';
+import { deletePost, loadPosts } from '../state/posts.actions';
 
 @Component({
   selector: 'app-posts-list',
@@ -23,6 +23,7 @@ export class PostsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.posts$ = this.store.select(getPosts);
+    this.store.dispatch(loadPosts());
   }
 
   onDeletePost(id: string | undefined) {

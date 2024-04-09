@@ -5,6 +5,7 @@ import { AppState } from '../../../store/app.state';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { isAuthenticated } from '../../../auth/state/auth.selector';
+import { authoLogout } from '../../../auth/state/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -20,5 +21,10 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAuthenticated$ = this.store.select(isAuthenticated);
+  }
+
+  onLogout(event: Event) {
+    event.preventDefault();
+    this.store.dispatch(authoLogout());
   }
 }

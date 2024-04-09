@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { initialState } from './auth.state';
-import { loginSuccess } from './auth.actions';
+import { authoLogout, loginSuccess, signupSuccess } from './auth.actions';
 
 const _authReducer = createReducer(
   initialState,
@@ -9,6 +9,18 @@ const _authReducer = createReducer(
     return {
       ...state,
       user: action.user,
+    };
+  }),
+  on(signupSuccess, (state: any, action: any) => {
+    return {
+      ...state,
+      user: action.user,
+    };
+  }),
+  on(authoLogout, (state) => {
+    return {
+      ...state,
+      user: null,
     };
   })
 );

@@ -13,6 +13,8 @@ import { AUTH_STATE_NAME } from './auth/state/auth.selector';
 import { authReducer } from './auth/state/auth.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth/state/auth.effects';
+import { PostsEffects } from './posts/state/posts.effects';
+import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
   {
@@ -28,8 +30,15 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./auth/login/login.component').then((m) => m.LoginComponent),
       },
+      {
+        path: 'signup',
+        loadComponent: () =>
+          import('./auth/signup/signup.component').then(
+            (m) => m.SignupComponent
+          ),
+      },
     ],
-    providers: [importProvidersFrom(EffectsModule.forFeature([AuthEffects]))],
+    providers: [importProvidersFrom(EffectsModule.forFeature([]))],
   },
   {
     path: 'counter',
@@ -53,10 +62,12 @@ export const routes: Routes = [
       { path: 'add', component: AddPostComponent },
       { path: 'edit/:id', component: EditPostComponent },
     ],
+    canActivate: [authGuard],
 
     providers: [
       importProvidersFrom(
-        StoreModule.forFeature(POST_STATE_NAME, postsReducer)
+        StoreModule.forFeature(POST_STATE_NAME, postsReducer),
+        EffectsModule.forFeature([PostsEffects])
       ),
     ],
   },

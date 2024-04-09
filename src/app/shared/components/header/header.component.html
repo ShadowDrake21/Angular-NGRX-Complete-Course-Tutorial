@@ -32,7 +32,12 @@
           <a class="nav-link" [routerLink]="['/auth/signup']">Sign-up</a>
         </li>
         <li class="nav-item" *ngIf="isAuthenticated$ | async">
-          <a class="nav-link" [routerLink]="['/auth/logout']">Logout</a>
+          <a
+            class="nav-link"
+            [routerLink]="['/auth/logout']"
+            (click)="onLogout($event)"
+            >Logout</a
+          >
         </li>
       </ul>
     </div>
