@@ -25,6 +25,9 @@
             <button class="btn btn-danger" (click)="onDeletePost(post.id)">
               Delete
             </button>
+            &nbsp;<a [routerLink]="['details', post.id]" class="btn btn-light"
+              >Details</a
+            >
           </td>
         </tr>
       </tbody>

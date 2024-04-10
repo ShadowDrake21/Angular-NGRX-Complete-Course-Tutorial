@@ -15,6 +15,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth/state/auth.effects';
 import { PostsEffects } from './posts/state/posts.effects';
 import { authGuard } from './services/auth.guard';
+import { SinglePostComponent } from './posts/single-post/single-post.component';
 
 export const routes: Routes = [
   {
@@ -71,4 +72,5 @@ export const routes: Routes = [
       ),
     ],
   },
+  { path: 'posts/details/:id', component: SinglePostComponent },
 ];

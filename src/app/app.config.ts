@@ -10,18 +10,26 @@ import { StoreModule } from '@ngrx/store';
 import { appReducer } from './store/app.state';
 import { AuthEffects } from './auth/state/auth.effects';
 import { AuthTokenInterceptor } from './services/AuthToken.interceptor';
+import {
+  provideRouterStore,
+  StoreRouterConnectingModule,
+} from '@ngrx/router-store';
+import { CustomSerializer } from './store/router/custom-serializer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     importProvidersFrom(
       EffectsModule.forRoot(AuthEffects),
-      StoreModule.forRoot(appReducer)
+      StoreModule.forRoot(appReducer),
+      StoreRouterConnectingModule.forRoot({
+        serializer: CustomSerializer,
+      })
     ), ///!!!!!!!!!!!!!!!!!!!!!!!!!
-
     provideStoreDevtools({
       logOnly: !isDevMode(),
     }),
     provideHttpClient(withInterceptors([AuthTokenInterceptor])),
+    provideRouterStore(),
   ],
 };
