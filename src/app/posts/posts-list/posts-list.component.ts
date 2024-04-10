@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 
 import { AppState } from '../../store/app.state';
 import { Post } from '../../models/posts.model';
-import { getPosts } from '../state/posts.selector';
+import { getCount, getPosts } from '../state/posts.selector';
 import { RouterModule } from '@angular/router';
 import { deletePost, loadPosts } from '../state/posts.actions';
 
@@ -20,9 +20,11 @@ export class PostsListComponent implements OnInit {
   private store = inject(Store<AppState>);
 
   posts$!: Observable<Post[]>;
+  count$!: Observable<number>;
 
   ngOnInit(): void {
     this.posts$ = this.store.select(getPosts);
+    this.count$ = this.store.select(getCount);
     this.store.dispatch(loadPosts());
   }
 

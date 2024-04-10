@@ -11,7 +11,7 @@ import {
   updatePost,
   updatePostSuccess,
 } from './posts.actions';
-import { filter, map, mergeMap, switchMap } from 'rxjs';
+import { filter, map, mergeMap, of, switchMap, withLatestFrom } from 'rxjs';
 import {
   ROUTER_NAVIGATION,
   RouterNavigatedAction,
@@ -19,21 +19,32 @@ import {
   routerNavigationAction,
   SerializedRouterStateSnapshot,
 } from '@ngrx/router-store';
+import { Update } from '@ngrx/entity';
+import { Post } from '../../models/posts.model';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/app.state';
+import { getPosts } from './posts.selector';
+import { dummyAction } from '../../auth/state/auth.actions';
 
 @Injectable()
 export class PostsEffects {
   private actions$ = inject(Actions);
   private postsService = inject(PostsService);
+  private store = inject(Store<AppState>);
 
   loadPosts$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadPosts),
-      mergeMap((action) => {
-        return this.postsService.getPosts().pipe(
-          map((posts) => {
-            return loadPostsSuccess({ posts });
-          })
-        );
+      withLatestFrom(this.store.select(getPosts)),
+      mergeMap(([action, posts]) => {
+        if (!posts.length || posts.length === 1) {
+          return this.postsService.getPosts().pipe(
+            map((posts) => {
+              return loadPostsSuccess({ posts });
+            })
+          );
+        }
+        return of(dummyAction());
       })
     );
   });
@@ -58,7 +69,13 @@ export class PostsEffects {
       switchMap((action) => {
         return this.postsService.updatePost(action.post).pipe(
           map((data) => {
-            return updatePostSuccess({ post: action.post });
+            const updatedPost: Update<Post> = {
+              id: action.post.id ?? '',
+              changes: {
+                ...action.post,
+              },
+            };
+            return updatePostSuccess({ post: updatedPost });
           })
         );
       })
@@ -77,6 +94,7 @@ export class PostsEffects {
       })
     );
   });
+
   getSinglePost = createEffect(() => {
     return this.actions$.pipe(
       ofType(ROUTER_NAVIGATION),
@@ -88,13 +106,17 @@ export class PostsEffects {
         const params = (snapshot as any).params;
         return params['id'];
       }),
-      switchMap((id) => {
-        return this.postsService.getPostById(id).pipe(
-          map((post) => {
-            const postData = [{ ...post, id }];
-            return loadPostsSuccess({ posts: postData });
-          })
-        );
+      withLatestFrom(this.store.select(getPosts)),
+      switchMap(([id, posts]) => {
+        if (!posts.length) {
+          return this.postsService.getPostById(id).pipe(
+            map((post) => {
+              const postData = [{ ...post, id }];
+              return loadPostsSuccess({ posts: postData });
+            })
+          );
+        }
+        return of(dummyAction());
       })
     );
   });
