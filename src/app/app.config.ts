@@ -15,21 +15,30 @@ import {
   StoreRouterConnectingModule,
 } from '@ngrx/router-store';
 import { CustomSerializer } from './store/router/custom-serializer';
+import { EntityDataModule, provideEntityData, withEffects } from '@ngrx/data';
+import { entityConfig } from './entity-metadata';
+import { PostsResolver } from './postsData/posts.resolver';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
+    // importProvidersFrom(EffectsModule.forRoot(AuthEffects), StoreModule.forRoot(appReducer), StoreRouterConnectingModule.forRoot({
+    //     serializer: CustomSerializer,
+    // })), ///!!!!!!!!!!!!!!!!!!!!!!!!!
+    // provideStoreDevtools({
+    //     logOnly: !isDevMode(),
+    // }),
+    // provideHttpClient(withInterceptors([AuthTokenInterceptor])),
+    // provideRouterStore(),
+    // provideEntityData(entityConfig, withEffects())
     importProvidersFrom(
-      EffectsModule.forRoot(AuthEffects),
-      StoreModule.forRoot(appReducer),
-      StoreRouterConnectingModule.forRoot({
-        serializer: CustomSerializer,
-      })
-    ), ///!!!!!!!!!!!!!!!!!!!!!!!!!
+      StoreModule.forRoot({}),
+      EffectsModule.forRoot([]),
+      EntityDataModule.forRoot(entityConfig)
+    ),
     provideStoreDevtools({
       logOnly: !isDevMode(),
     }),
-    provideHttpClient(withInterceptors([AuthTokenInterceptor])),
-    provideRouterStore(),
+    provideHttpClient(),
   ],
 };
